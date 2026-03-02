@@ -24,7 +24,7 @@ export default function DashboardLayout({
   manager,
 }: DashboardLayoutProps): React.ReactNode {
   //  user Role
-  const userRole: SystemRoleType = SYSTEM_ROLES.FRONT_DESK;
+  const userRole: SystemRoleType = SYSTEM_ROLES.SALES;
 
   // dashboards based on user role
   const dashboards: Record<SystemRoleType, React.ReactNode> = {
