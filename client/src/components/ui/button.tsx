@@ -27,7 +27,7 @@ const buttonVariants = cva(
           "bg-red-100 text-red-700 border-2 border-red-300 hover:bg-red-200 focus-visible:ring-red-500/20",
       },
       size: {
-        default: "h-14 px-4 py-2 has-[>svg]:px-3",
+        default: "h-10 px-4 py-2 has-[>svg]:px-3",
         xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",

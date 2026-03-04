@@ -22,26 +22,30 @@ export default function ClientInfo() {
     source: "جوجل",
     campaign: "الحملة ب - يناير",
     service: "الخدمة ب",
-    submittedAt: minsAgo(2), // وقت الإرسال
+    submittedAt: minsAgo(2),
     location: "الفرع الرئيسي",
   };
   const { minutes } = getUserTimeWait(lead.submittedAt);
   return (
     <Card className="w-full h-full">
       {/* Header */}
-      <CardHeader className="flex items-center  justify-between border-b border-primary-dark/10">
+      <CardHeader className="flex items-center justify-between border-b border-border pb-3">
         {/* Title */}
-        <CardTitle className="flex items-center gap-x-1 text-xl font-bold">
+        <CardTitle className="flex items-center gap-2 text-lg font-bold">
           {/* Icon */}
-          <IdCard className="text-primary-dark" />
+          <span className="flex items-center justify-center bg-primary/10 rounded-lg p-1.5">
+            <IdCard className="text-primary-dark" size={18} />
+          </span>
           {/* Label */}
           <span>معلومات العميل</span>
         </CardTitle>
 
         {/* Tag */}
-        <Badge>جديد</Badge>
+        <Badge className="bg-green-100 text-green-700 border-green-200 hover:bg-green-100">
+          جديد
+        </Badge>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4">
         {/* Name */}
         <InfoContainer label="الاسم" value={lead.name} Icon={User2} />
         <InfoContainer label="المصدر" value={lead.source} Icon={LassoSelect} />
@@ -58,12 +62,12 @@ export default function ClientInfo() {
         />
         <InfoContainer label="الموقع" value={lead.location} Icon={MapPin} />
 
-        <p className="flex items-center gap-2 text-sm text-green-600 col-span-full mt-2">
+        <div className="flex items-center gap-2 text-sm text-green-700 col-span-full mt-1 bg-green-50 border border-green-100 rounded-lg px-3 py-2">
           {/* Icon */}
-          <MessageCircleMore size={16} />
+          <MessageCircleMore size={15} />
           {/* Label */}
           <span>تم إرسال الرد التلقائي</span>
-        </p>
+        </div>
       </CardContent>
     </Card>
   );

@@ -42,8 +42,8 @@ export default function NotesForm() {
               id="notes-form-note"
               aria-invalid={fieldState.invalid}
               placeholder="أكتب ملاحظتك هنا"
-              className="bg-muted py-2 px-3 rounded-md  focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-muted"
-              rows={5}
+              className="bg-accent/50 border-border py-3 px-4 rounded-xl focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-background resize-none"
+              rows={4}
             />
 
             {/* Error */}
@@ -56,11 +56,11 @@ export default function NotesForm() {
       <Button
         type="submit"
         size={"lg"}
-        className="my-4 flex items-center gap-2"
+        className="mt-3 mb-5 flex items-center gap-2"
         disabled={isSubmitted && !isValid}
       >
-        <Save />
-        أضافة الملاحظة
+        <Save size={16} />
+        إضافة الملاحظة
       </Button>
     </form>
   );

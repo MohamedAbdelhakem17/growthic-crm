@@ -7,11 +7,13 @@ export default function SellerNotes() {
   return (
     <Card className="w-full h-full col-span-full">
       {/* Header */}
-      <CardHeader className=" border-b border-primary-dark/20">
+      <CardHeader className="border-b border-border pb-3">
         {/* Title */}
-        <CardTitle className="flex items-center gap-x-1 text-xl font-bold">
+        <CardTitle className="flex items-center gap-2 text-lg font-bold">
           {/* Icon */}
-          <NotebookPen className="text-primary-dark" />
+          <span className="flex items-center justify-center bg-primary/10 rounded-lg p-1.5">
+            <NotebookPen className="text-primary-dark" size={18} />
+          </span>
           {/* Label */}
           <span> الملاحظات</span>
         </CardTitle>

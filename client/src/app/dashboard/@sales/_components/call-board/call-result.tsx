@@ -2,7 +2,13 @@ import { Button } from "@/components/ui/button";
 import CALL_RESULT from "@/lib/constant/call-result.constant";
 import { CircleCheckBig, PhoneMissed, RotateCw, X } from "lucide-react";
 
-export default function CallResult() {
+export default function CallResult({
+  setCallResult,
+  setIsCallEnding,
+}: {
+  setCallResult: React.Dispatch<React.SetStateAction<string>>;
+  setIsCallEnding: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const callResult = [
     {
       label: "مؤهل",
@@ -36,6 +42,10 @@ export default function CallResult() {
             key={result.value}
             variant={result.variant as "success" | "warning" | "soft-red"}
             className="w-full items-center flex-row-reverse gap-2"
+            onClick={() => {
+              setIsCallEnding(true);
+              setCallResult(result.value);
+            }}
           >
             {result.Icon}
             {result.label}

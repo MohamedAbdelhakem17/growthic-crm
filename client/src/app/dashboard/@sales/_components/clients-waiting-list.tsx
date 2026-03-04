@@ -20,59 +20,62 @@ export default function ClientsWaitingList({
   }[];
 }) {
   return (
-    <aside className="bg-white shadow py-4  max-w-87.5 w-full max-h-100 mx-auto lg:min-h-full overflow-y-scroll lg:overflow-y-auto">
+    <aside className="bg-white border-e border-border w-full max-w-87.5 mx-auto h-full overflow-y-auto flex flex-col">
       {/* Header */}
-      <h2 className="flex items-center gap-2.5 text-xl font-bold  p-4 ">
-        {/* Icon */}
-        <Users className="text-primary-dark" size={28} strokeWidth={3} />
-        {/* Label */}
-        قائمة الانتظار
-        <span className="text-sm text-muted-foreground mr-2">
-          ({clients.length} عميل)
-        </span>
-      </h2>
+      <div className="sticky top-0 bg-white z-10 px-4 pt-4 pb-3 border-b border-border">
+        <h2 className="flex items-center gap-2.5 text-lg font-bold">
+          <span className="flex items-center justify-center bg-primary/10 rounded-lg p-1.5">
+            <Users className="text-primary-dark" size={20} strokeWidth={2.5} />
+          </span>
+          قائمة الانتظار
+          <span className="mr-auto text-xs font-medium text-muted-foreground bg-accent px-2 py-1 rounded-full">
+            {clients.length} عميل
+          </span>
+        </h2>
+      </div>
 
       {/* User List  */}
-      <div className="py-2 lg:space-y-6 space-y-1">
+      <div className="flex-1 divide-y divide-border/60">
         {clients.length > 0 ? (
           clients.map((client, index) => {
             const { minutes, variant } = getUserTimeWait(client.createdAt);
             return (
               <div
                 key={index}
-                className="flex flex-col gap-1 p-3  border-y border-primary-dark/20"
+                className="flex items-center justify-between gap-2 px-4 py-2.5 hover:bg-accent/40 transition-colors duration-150 cursor-pointer"
               >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="space-y-2 space-x-3.5">
-                    {/* User Name */}
-                    <p className="text-sm font-medium">{client.name}</p>
-                    {/* Service */}
-                    <p className="text-sm text-muted-foreground inline-flex items-center gap-1">
-                      <Tag size={14} />
-                      {client.service}
-                    </p>
-                    <p className="text-sm text-muted-foreground inline-flex items-center gap-1">
-                      <Clock size={14} />
-                      منذ {minutes} دقيقة
-                    </p>
-                  </div>
-
-                  {/* Wait time badge */}
-                  <Badge
-                    className={cn(
-                      "gap-1 bg-transparent",
-                      variantClassMap[variant],
-                    )}
-                  >
-                    <span className="size-1.5 rounded-full bg-current" />
-                  </Badge>
+                <div className="flex flex-col gap-1 min-w-0">
+                  {/* User Name */}
+                  <p className="text-lg font-semibold truncate">
+                    {client.name}
+                  </p>
+                  {/* Service */}
+                  <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                    <Tag size={11} />
+                    {client.service}
+                  </p>
+                  <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                    <Clock size={11} />
+                    منذ {minutes} دقيقة
+                  </p>
                 </div>
+
+                {/* Wait time badge */}
+                <Badge
+                  className={cn(
+                    "gap-1.5 bg-transparent shrink-0 border px-2 py-1 rounded-full",
+                    variantClassMap[variant],
+                  )}
+                >
+                  <span className="size-2 rounded-full bg-current" />
+                </Badge>
               </div>
             );
           })
         ) : (
-          <div className="text-center text-sm text-muted-foreground py-10">
-            لا يوجد عملاء في قائمة الانتظار
+          <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
+            <Users size={36} className="opacity-20" />
+            <p className="text-sm">لا يوجد عملاء في قائمة الانتظار</p>
           </div>
         )}
       </div>
