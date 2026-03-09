@@ -23,6 +23,9 @@ if (envPath) {
 const express = require("express");
 
 const cors = require("cors");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const morgan = require("morgan");
 
 const databaseConnect = require("./config/database-connection");
 const HTTP_STATUS_TEXT = require("./libs/constant/http-status.constant");
@@ -32,6 +35,46 @@ const AppRouterV1 = require("./api/v1/routes");
 
 const app = express();
 
+// ========== Security Headers ==========
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'"],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'"],
+        fontSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        frameSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    crossOriginEmbedderPolicy: true,
+    crossOriginOpenerPolicy: { policy: "same-origin" },
+    crossOriginResourcePolicy: { policy: "same-origin" },
+    dnsPrefetchControl: { allow: false },
+    frameguard: { action: "deny" },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+    ieNoOpen: true,
+    noSniff: true,
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    xssFilter: true,
+  }),
+);
+
+// ========== Request Logging ==========
+if (process.env.ENVIRONMENT_MODE === "development") {
+  app.use(morgan("dev"));
+} else {
+  app.use(morgan("combined"));
+}
+
 // ====== Serve Static Uploads ======
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
@@ -39,7 +82,10 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 databaseConnect();
 
 // ========== Body Parser ==========
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
+
+// ========== NoSQL Injection Protection ==========
+app.use(mongoSanitize());
 
 // ========== CORS  ==========
 const corsOrigins = process.env.CORS_ORIGINS
@@ -83,4 +129,10 @@ const server = app.listen(PORT, () => {
 process.on("unhandledRejection", (error) => {
   console.error(`Unhandled Rejection: ${error.name} | ${error.message}`);
   server.close(() => process.exit(1));
+});
+
+// ====== Handle Uncaught Exceptions ======
+process.on("uncaughtException", (error) => {
+  console.error(`Uncaught Exception: ${error.name} | ${error.message}`);
+  process.exit(1);
 });

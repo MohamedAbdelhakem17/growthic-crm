@@ -1,16 +1,23 @@
+const authRouter = require("./auth.route");
+const leadsRouter = require("./leads.route");
+
 const API_PREFIX = "/api/v1";
 
 const Routes = [
   {
     path: `${API_PREFIX}/auth`,
-    router: require("./auth.route"),
+    router: authRouter,
+  },
+  {
+    path: `${API_PREFIX}/leads`,
+    router: leadsRouter,
   },
 ];
 
 const AppRouter = (app) => {
-  for (const route of Routes) {
+  Routes.forEach((route) => {
     app.use(route.path, route.router);
-  }
+  });
 };
 
 module.exports = AppRouter;
