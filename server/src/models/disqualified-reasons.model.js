@@ -7,7 +7,7 @@ const disqualifiedReasonSchema = new mongoose.Schema(
       required: [true, "Reason is required"],
       trim: true,
       minlength: [3, "Reason must be at least 3 characters long"],
-      maxlength: [255, "Reason must be less than 255 characters long"],
+      maxlength: [500, "Reason must be less than 500 characters long"],
     },
 
     created_by: {
