@@ -3,6 +3,7 @@ const leadsRouter = require("./leads.route");
 const notesRouter = require("./notes.route");
 const disqualifiedReasonsRouter = require("./disqualified-reasons.route");
 const branchesRouter = require("./branches.route");
+const servicesRouter = require("./services.route");
 
 const API_PREFIX = "/api/v1";
 
@@ -26,6 +27,10 @@ const Routes = [
   {
     path: `${API_PREFIX}/branches`,
     router: branchesRouter,
+  },
+  {
+    path: `${API_PREFIX}/services`,
+    router: servicesRouter,
   },
 ];
 
