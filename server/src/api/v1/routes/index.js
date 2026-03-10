@@ -4,6 +4,8 @@ const notesRouter = require("./notes.route");
 const disqualifiedReasonsRouter = require("./disqualified-reasons.route");
 const branchesRouter = require("./branches.route");
 const servicesRouter = require("./services.route");
+const workTimeRouter = require("./work-time.route");
+const businessProfileRouter = require("./business-profile.route");
 
 const API_PREFIX = "/api/v1";
 
@@ -31,6 +33,14 @@ const Routes = [
   {
     path: `${API_PREFIX}/services`,
     router: servicesRouter,
+  },
+  {
+    path: `${API_PREFIX}/work-times`,
+    router: workTimeRouter,
+  },
+  {
+    path: `${API_PREFIX}/business-profile`,
+    router: businessProfileRouter,
   },
 ];
 
