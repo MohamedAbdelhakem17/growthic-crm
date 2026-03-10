@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const AppError = require("../../../libs/utils/app-error");
 const httpStatus = require("../../../libs/constant/http-status.constant");
 const LeadsModels = require("../../../models/leads.model");
+const SYSTEM_ROLES = require("../../../libs/constant/system-roles.constant");
 
 // @desc    Create a new lead
 // @route   POST /api/v1/leads
@@ -66,7 +67,7 @@ const updateLead = asyncHandler(async (req, res) => {
 
 // @desc    Get single lead
 // @route   GET /api/v1/leads/:id
-// @access  Public
+// @access  private (manager and sales)
 const getSingleLead = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -83,8 +84,49 @@ const getSingleLead = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Get leads (all / by branch / by date)
+// @route   GET /api/v1/leads
+// @access  Manager: full filter | FrontDesk: own branch + date only
+const getLeads = asyncHandler(async (req, res) => {
+  const { branch, date } = req.query;
+
+  const filter = {};
+
+  // FrontDesk is locked to their own branch
+  if (req.user.role === SYSTEM_ROLES.FRONT_DESK) {
+    filter.branch = req.user.branch;
+  } else if (branch) {
+    filter.branch = branch;
+  }
+
+  // filter by date
+  if (date) {
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    filter.createdAt = {
+      $gte: startOfDay,
+      $lte: endOfDay,
+    };
+  }
+
+  const leads = await LeadsModels.find(filter).sort({ createdAt: -1 }).lean();
+
+  res.status(200).json({
+    status: httpStatus.SUCCESS,
+    message:
+      leads.length === 0 ? "No leads found" : "Leads retrieved successfully",
+    results: leads.length,
+    data: leads,
+  });
+});
+
 module.exports = {
   createLead,
   updateLead,
   getSingleLead,
+  getLeads,
 };

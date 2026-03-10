@@ -1,7 +1,8 @@
-const { check } = require("express-validator");
+const { check, query } = require("express-validator");
 
 const validationMiddleware = require("../../middleware/validator.middleware");
 const BOOKING_STATUS = require("../constant/booking-status.constant");
+const SYSTEM_ROLES = require("../constant/system-roles.constant");
 
 const AppError = require("../utils/app-error");
 const httpStatus = require("../constant/http-status.constant");
@@ -86,8 +87,31 @@ const getSingleLeadValidator = [
   validationMiddleware,
 ];
 
+const getLeadsValidator = [
+  query("date")
+    .optional()
+    .isISO8601()
+    .withMessage("Date must be a valid date (YYYY-MM-DD)"),
+
+  query("branch")
+    .optional()
+    .isMongoId()
+    .withMessage("Invalid branch ID format")
+    .custom((value, { req }) => {
+      if (req.user.role === SYSTEM_ROLES.FRONT_DESK) {
+        throw new Error(
+          "Front desk users cannot filter by branch. Your branch is applied automatically",
+        );
+      }
+      return true;
+    }),
+
+  validationMiddleware,
+];
+
 module.exports = {
   createLeadValidator,
   updateLeadValidator,
   getSingleLeadValidator,
+  getLeadsValidator,
 };

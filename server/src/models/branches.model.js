@@ -29,19 +29,20 @@ const branchSchema = new mongoose.Schema(
       maxlength: [255, "Branch location must be less than 255 characters long"],
     },
 
-    front_desk: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "Branch must have a front desk user"],
-      validate: {
-        validator: async function (userId) {
-          const User = mongoose.model("User");
-          const user = await User.findById(userId);
-          return user && user.role === SYSTEM_ROLES.FRONT_DESK;
+    front_desk: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        validate: {
+          validator: async function (userId) {
+            const User = mongoose.model("User");
+            const user = await User.findById(userId);
+            return user && user.role === SYSTEM_ROLES.FRONT_DESK;
+          },
+          message: "Front desk user must have the role FRONT_DESK",
         },
-        message: "Front desk user must have the role FRONT_DESK",
       },
-    },
+    ],
 
     work_times: [
       {
@@ -72,17 +73,20 @@ branchSchema.pre(/^find/, function (next) {
 
 // ─── Instance Methods ───────────────────────────────
 
-// Check if a user is the front desk for this branch
+// Check if a user is a front desk for this branch
 branchSchema.methods.isFrontDesk = function (userId) {
   if (!userId || !this.front_desk) return false;
-  return this.front_desk._id.toString() === userId.toString();
+  return this.front_desk.some(
+    (fd) => fd._id.toString() === userId.toString(),
+  );
 };
 
 // Clean response
 branchSchema.methods.toJSON = function () {
   const obj = this.toObject();
-  if (obj.front_desk && obj.front_desk._id)
-    obj.frontDeskId = obj.front_desk._id;
+  if (Array.isArray(obj.front_desk)) {
+    obj.frontDeskIds = obj.front_desk.map((fd) => fd._id || fd);
+  }
   delete obj.front_desk;
   return obj;
 };

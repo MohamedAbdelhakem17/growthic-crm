@@ -2,6 +2,7 @@ const authRouter = require("./auth.route");
 const leadsRouter = require("./leads.route");
 const notesRouter = require("./notes.route");
 const disqualifiedReasonsRouter = require("./disqualified-reasons.route");
+const branchesRouter = require("./branches.route");
 
 const API_PREFIX = "/api/v1";
 
@@ -21,6 +22,10 @@ const Routes = [
   {
     path: `${API_PREFIX}/disqualified-reasons`,
     router: disqualifiedReasonsRouter,
+  },
+  {
+    path: `${API_PREFIX}/branches`,
+    router: branchesRouter,
   },
 ];
 
